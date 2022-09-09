@@ -24,13 +24,12 @@ app.use(cors());
 app.post('/api/shorturl', async function(req, res) {
   
   try {
+    console.log(req.body.url)
           if (validator.isURL(req.body.url,{require_protocol: true})) {
             
             const dns=await dnsPromises.lookup(req.body.url.substr(req.body.url.indexOf('://')+3))
-            res.send('holla')
-            
             await mongoose.connect(process.env.MONGO_URI);
-            res.send('successful connection to DB');
+            
             const result=await URLModel.findOne({
               original_url:req.body.url
             })
@@ -58,9 +57,9 @@ app.post('/api/shorturl', async function(req, res) {
           })
       }
   catch(err) {
-    console.log(err)
+    
       res.send({
-        error: err
+        error: 'invalid url'
       })
     }
   });
