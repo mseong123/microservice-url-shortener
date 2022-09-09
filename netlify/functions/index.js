@@ -30,7 +30,7 @@ app.post('/api/shorturl', async function(req, res) {
             console.log(dns)
             
             await mongoose.connect(process.env.MONGO_URI);
-            console.log('successful connection to DB');
+            res.send('successful connection to DB');
             const result=await URLModel.findOne({
               original_url:req.body.url
             })
