@@ -2,6 +2,7 @@ const express = require('express');
 const serverless=require('serverless-http')
 const cors = require('cors');
 const app = express();
+const dnsPromises=require('node:dns').promises;
 const URLModel=require('./database/models/URL.js');
 const mongoose=require('mongoose');
 const validator=require('validator');
@@ -18,11 +19,16 @@ app.use(express.urlencoded({extended:false}));
 app.use(cors());
 
 
-// Your first API endpoint
+// API endpoint
 //use async/await function for readability otherwise Promise chain hell - see example code at bottom 
 app.post('/api/shorturl', async function(req, res) {
+  
   try {
-          if (validator.isURL(req.body.url)) {
+          if (validator.isURL(req.body.url,{require_protocol: true})) {
+            
+            const dns=await dnsPromises.lookup(req.body.url.substr(req.body.url.indexOf('://')+3))
+            console.log(dns)
+            
             await mongoose.connect(process.env.MONGO_URI);
             console.log('successful connection to DB');
             const result=await URLModel.findOne({
@@ -30,7 +36,7 @@ app.post('/api/shorturl', async function(req, res) {
             })
               .select('-_id original_url short_url')
               .exec()
-            console.log(result)
+            
             if (result) 
               res.json(result)
 
@@ -52,9 +58,32 @@ app.post('/api/shorturl', async function(req, res) {
           })
       }
   catch(err) {
-      res.send(err)
+    console.log(err)
+      res.send({
+        error: 'invalid url'
+      })
     }
   });
+
+  app.get('/api/shorturl/:shorturl', async function(req, res) {
+    try {
+      console.log('GET '+ req.params.shorturl)
+      await mongoose.connect(process.env.MONGO_URI);
+      console.log('successful connection to DB');
+      const result=await URLModel.findOne({
+        short_url:req.params.shorturl
+      });
+      if (result) 
+          res.redirect(result.original_url)
+      else res.send({
+        error: 'invalid short-url'
+      })
+      
+
+    } catch(err) {
+      res.send(err)
+    }
+  })
 
 
 
