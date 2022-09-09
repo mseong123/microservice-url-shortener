@@ -73,8 +73,9 @@ app.post('/api/shorturl', async function(req, res) {
       const result=await URLModel.findOne({
         short_url:req.params.shorturl
       });
-      if (result) 
+      if (result) {
           res.redirect(result.original_url)
+      }
       else res.send({
         error: 'invalid short-url'
       })
