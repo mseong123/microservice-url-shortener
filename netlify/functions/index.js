@@ -53,16 +53,11 @@ app.post('/api/shorturl', async function(req, res) {
             }
           }
           else res.send({
-            error: 'invalid url',
-            error:'dunno what Error'
+            error: 'invalid url'
           })
       }
   catch(err) {
-    
-      res.send({
-        error: 'invalid url',
-        error:'catch error'+err
-      })
+      res.send(err)
     }
   });
 
