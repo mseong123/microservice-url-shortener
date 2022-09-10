@@ -28,7 +28,7 @@ app.post('/api/shorturl', async function(req, res) {
           if (validator.isURL(req.body.url,{require_protocol: true})) {
             
             const dns=await dnsPromises.lookup(req.body.url.substr(req.body.url.indexOf('://')+3))
-            res.send('mongoURI '+process.env.MONGO_URI)
+            res.send('mongoURI  '+process.env.MONGO_URI)
             await mongoose.connect(process.env.MONGO_URI);
             
             const result=await URLModel.findOne({
