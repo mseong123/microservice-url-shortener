@@ -56,7 +56,9 @@ app.post('/api/shorturl', async function(req, res) {
           })
       }
   catch(err) {
-      res.send(err)
+      res.send({
+        error: 'invalid url'
+      })
     }
   });
 
