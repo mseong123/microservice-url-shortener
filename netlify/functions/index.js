@@ -24,7 +24,6 @@ app.use(cors());
 app.post('/api/shorturl', async function(req, res) {
   
   try {
-    console.log(req.body.url)
           if (validator.isURL(req.body.url,{require_protocol: true})) {
             
             const dns=await dnsPromises.lookup(req.body.url.substr(req.body.url.indexOf('://')+3))
@@ -63,7 +62,6 @@ app.post('/api/shorturl', async function(req, res) {
 
   app.get('/api/shorturl/:shorturl', async function(req, res) {
     try {
-      console.log('GET '+ req.params.shorturl)
       await mongoose.connect(process.env.MONGO_URI);
       console.log('successful connection to DB');
       const result=await URLModel.findOne({
