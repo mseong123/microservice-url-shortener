@@ -13,6 +13,9 @@ hours on it and couldn't find a way so just wrote without module. Might have som
 Model.find.bind(Model) which is wrong. Originally wanted to use plugin for composability/reuseability of modules for future projects to be 
 hosted under netlify.Anyway left the plugin in repo for future reference*/  
 
+/*Update 13/9/2022, found out why behavior is unexpected, my query plugin is correct just that .call method is .call(object,parameter1,parameter2...),
+thats why found some unexpected behaviors. In future can refactor the codes*/
+
 //const query=require(./database/query.js)
 
 app.use(express.urlencoded({extended:false}));
